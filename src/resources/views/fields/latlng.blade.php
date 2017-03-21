@@ -186,10 +186,10 @@
                         }
                     });
                 }
-            }
-            
-            function handleNoGeolocation(databool){
-                (databool) ? console.log('Get current location success') : alert('Browser doesn\'t support Geolocation');
+
+                function handleNoGeolocation(databool){
+                    (databool) ? true : alert('Browser doesn\'t support Geolocation');
+                }
             }
             
             google.maps.event.addDomListener(window, 'load', initialize);
