@@ -164,7 +164,6 @@
                     } else {
                         // Browser doesn't support Geolocation
                         handleNoGeolocation(false);
-                        // alert('Browser doesn\'t support Geolocation');
                         $('.'+geolocate_icon).removeClass('fa-spin');
                     }
                 };
@@ -187,6 +186,10 @@
                         }
                     });
                 }
+            }
+            
+            function handleNoGeolocation(databool){
+                (databool) ? console.log('Get current location success') : alert('Browser doesn\'t support Geolocation');
             }
             
             google.maps.event.addDomListener(window, 'load', initialize);
