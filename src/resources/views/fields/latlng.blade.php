@@ -49,9 +49,7 @@
         <script>
         $(document).ready(function() {
 
-            // Since the old 'window' on keydown event function will working backward with 
-            // the already awesome BackPack-CRUD default submit on Enter,
-            // I've change the code a bit. Now it'll only affect this specific input.
+            // Prevent submit on Enter
             $('#search_address').keydown(function(event){
                 if(event.keyCode == 13) {
                     event.preventDefault();
@@ -69,14 +67,17 @@
                 var geocoder = new google.maps.Geocoder();
                 var mapOptions = {
                     center: latlng,
-                    zoom: 8,
+                    zoom: default_zoom,
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     draggableCursor: "pointer",
                     streetViewControl: false
                 };
 
                 // set search_address with formatted_address if latlng has value
-                (latlong == '') ? '' : setGeoCoder(latlng);
+                // (latlong == '') ? '' : setGeoCoder(latlng);
+                if (latlong) {
+                    setGeoCoder(latlng);
+                }
 
                 // set marker icon
                 var marker_icon = "{{ $field['marker_icon'] }}";
@@ -115,12 +116,11 @@
                 var infowindow = new google.maps.InfoWindow();
                 marker = new google.maps.Marker({
                     map: map,
-                    anchorPoint: new google.maps.Point(0, -29),
+                    anchorPoint: new google.maps.Point(0, -29), // point infoWindow directly above marker
                     icon : marker_icon
                 });
 
                 google.maps.event.addListener(autocomplete, 'place_changed', function() {
-                    //infowindow.close();
                     marker.setVisible(true);
                     markers.setMap(null);
                     var place = autocomplete.getPlace();
@@ -142,12 +142,12 @@
 
                 });
 
-                document.getElementById('geolocate').onclick=function(){
+                document.getElementById('geolocate').onclick = function() {
 
-                    $('.'+geolocate_icon).addClass('fa-spin'); // add spinning animation for no reason..
+                    $('.'+geolocate_icon).addClass('fa-spin'); // add spin animation to locate icon
 
-                    if(navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(function(position) {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition( function(position) {
                             var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
                             map.setCenter(pos);
@@ -187,7 +187,7 @@
                     });
                 }
 
-                function handleNoGeolocation(databool){
+                function handleNoGeolocation(databool) {
                     (databool) ? true : alert('Browser doesn\'t support Geolocation');
                 }
             }
