@@ -5,9 +5,9 @@
             <div class="input-group-addon">
                 <i class="fa fa-map-marker"></i>
             </div>
-            <input id="search_address" class="form-control" type="text" placeholder="Enter a location" />
+            <input id="search_address" class="form-control" type="text" placeholder="{{ trans('backpack::crud.enter_location') }}" />
             <div id="geolocate" class="input-group-addon btn btn-primary">
-                <i class="fa {{$field['geolocate_icon']}}"></i>
+                <i class="fa {{ $field['geolocate_icon'] }}"></i>
             </div>
         </div>
     </div>
@@ -29,7 +29,7 @@
         >
     </div>
     <div class="form-group col-md-12">
-        <div id="map-canvas" style="{{$field['map_style']}}"></div>  
+        <div id="map-canvas" style="{{ $field['map_style'] }}"></div>  
     </div>
 
 {{-- ########################################## --}}
@@ -45,13 +45,14 @@
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
     	{{-- YOUR JS HERE --}}
-        <script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&key={{$field['google_api_key']}}"></script>
-
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&key={{ $field['google_api_key'] }}"></script>
         <script>
         $(document).ready(function() {
 
-            // overwrite BackPack-CRUD submit on Enter
-            $(window).keydown(function(event){
+            // Since the old 'window' on keydown event function will working backward with 
+            // the already awesome BackPack-CRUD default submit on Enter,
+            // I've change the code a bit. Now it'll only affect this specific input.
+            $('#search_address').keydown(function(event){
                 if(event.keyCode == 13) {
                     event.preventDefault();
                     return false;
@@ -60,8 +61,8 @@
 
             function initialize() {
                 var marker;
-                var default_zoom = {{$field['default_zoom']}};
-                var geolocate_icon = "{{$field['geolocate_icon']}}";
+                var default_zoom = {{ $field['default_zoom'] }};
+                var geolocate_icon = "{{ $field['geolocate_icon'] }}";
                 var latlong = document.getElementById('latlong').value; // get latlng value if any
                 latlong = latlong.split(',');
                 var latlng = (latlong == '') ? new google.maps.LatLng(3.138675,101.6167769) : new google.maps.LatLng(latlong[0], latlong[1]);
@@ -78,7 +79,7 @@
                 (latlong == '') ? '' : setGeoCoder(latlng);
 
                 // set marker icon
-                var marker_icon = "{{$field['marker_icon']}}";
+                var marker_icon = "{{ $field['marker_icon'] }}";
                 (marker_icon == '') ? null : marker_icon;
                 
                 var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -167,7 +168,6 @@
                         $('.'+geolocate_icon).removeClass('fa-spin');
                     }
                 };
-
 
                 function setLatLong(lat, long) {
                     document.getElementById('latlong').value=lat+', '+long;
